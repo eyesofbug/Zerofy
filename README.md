@@ -1,1 +1,169 @@
 # Zerofy
+#This is only a basic setup  for geting a small idea about what we a building
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zerofy - Waste Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            margin: auto;
+            transition: 0.3s;
+        }
+        .hidden { display: none; }
+        button {
+            background: #00f7ff;
+            color: black;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: 0.3s;
+            box-shadow: 0 0 10px #00f7ff;
+        }
+        button:hover {
+            background: #008c99;
+            box-shadow: 0 0 15px #00f7ff;
+        }
+        select, input {
+            padding: 12px;
+            margin-bottom: 15px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        ul li:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="loginScreen">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div class="container hidden" id="mainApp">
+        <h1>Zerofy - Waste Management</h1>
+        <p>Reduce waste, earn rewards, and access surplus food at lower costs.</p>
+        <div id="home" class="screen">
+            <button onclick="showScreen('wasteDeposit')">♻️ Deposit Waste</button>
+            <button onclick="showScreen('foodMarketplace')">🍽️ Buy Food</button>
+            <button onclick="showScreen('buyFoodWaste')">🛒 Buy Food Waste</button>
+            <button onclick="showScreen('redeemPoints')">🎟️ Redeem Points</button>
+        </div>
+        
+        <div id="wasteDeposit" class="screen hidden">
+            <h2>Deposit Waste & Earn</h2>
+            <select id="wasteType">
+                <option value="plastic">Plastic</option>
+                <option value="paper">Paper</option>
+                <option value="organic">Organic</option>
+            </select>
+            <button onclick="depositWaste()">🎁 Claim Rewards (<span id="rewardPoints">0</span> pts)</button>
+            <button onclick="showScreen('home')">🔙 Back</button>
+        </div>
+        
+        <div id="foodMarketplace" class="screen hidden">
+            <h2>Food Marketplace</h2>
+            <ul>
+                <li onclick="selectFood('Biryani')">🥘 Biryani - ₹50</li>
+                <li onclick="selectFood('Veg Meals')">🥗 Veg Meals - ₹40</li>
+            </ul>
+            <button onclick="showScreen('home')">🔙 Back</button>
+        </div>
+
+        <div id="redeemPoints" class="screen hidden">
+            <h2>Redeem Points</h2>
+            <p>You have <span id="rewardPointsDisplay">0</span> points.</p>
+            <ul>
+                <li>🎬 1 Month Streaming Subscription - 500 pts</li>
+                <li>🎮 Game Credits - 300 pts</li>
+                <li>🍕 Free Food Voucher - 200 pts</li>
+                <li onclick="transferToUPI()">💰 Transfer to UPI (₹1 per 10 pts)</li>
+                <li onclick="showScreen('foodMarketplace')">🍔 Buy Food Using Points</li>
+            </ul>
+            <button onclick="showScreen('home')">🔙 Back</button>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            
+            alert("Logging in... Validating credentials.");
+            document.getElementById("loginScreen").classList.add("hidden");
+            document.getElementById("mainApp").classList.remove("hidden");
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        let rewardPoints = 0;
+        function depositWaste() {
+            const wasteType = document.getElementById("wasteType").value;
+            if (wasteType === "plastic") rewardPoints += 10;
+            else if (wasteType === "paper") rewardPoints += 5;
+            else if (wasteType === "organic") rewardPoints += 2;
+            
+            document.getElementById("rewardPoints").textContent = rewardPoints;
+            document.getElementById("rewardPointsDisplay").textContent = rewardPoints;
+            alert("✅ Waste deposited successfully!");
+        }
+
+        function transferToUPI() {
+            let amount = rewardPoints / 10;
+            if (amount > 0) {
+                alert(`💸 Money Transferred Successfully! ₹${amount.toFixed(2)} added to your account.`);
+                rewardPoints = 0;
+                document.getElementById("rewardPointsDisplay").textContent = rewardPoints;
+            } else {
+                alert("❌ Not enough points to transfer.");
+            }
+        }
+    </script>
+</body>
+</html>
